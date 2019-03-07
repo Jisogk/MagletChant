@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class MoonStone : MonoBehaviour {
-    public int player;
+    public int playerID;
     public int HPMax;
     public int HP;
     public GameObject bar;
@@ -27,7 +27,14 @@ public class MoonStone : MonoBehaviour {
     public void hurt(int damage)
     {
         HP -= damage;
+
+        if (HP < 0)
+        {
+            HP = 0;
+            // TODO: GameOver
+        }
         refresh();
+        
         // TODO: check win
 
     }
@@ -37,6 +44,12 @@ public class MoonStone : MonoBehaviour {
         HP = (int)(HP * rate);
         if (HP > HPMax)
             HP = HPMax;
+        else if (HP < 0)
+        {
+            HP = 0;
+            // TODO: GameOver
+        }
+        
     }
 
     /*

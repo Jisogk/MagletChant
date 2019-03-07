@@ -6,7 +6,8 @@ using UnityEngine;
 [Serializable]
 public class Witch : MonoBehaviour {
 
-    public int player;
+    public int id;
+
     // state machine
     public int state;
     public static int NORMAL = 0;
@@ -26,23 +27,31 @@ public class Witch : MonoBehaviour {
 	public Sprite spriteDown;
 	public Sprite spriteChant;
 	
+    // for dazhao
     // public int red;
     // public int green;
     // public int blue;
 
-    public GameObject shieldObject;
     public Shield shield;
     public GameObject enemy;
-    public GameObject keyboard;
+    private KeyBoard keyboard;
 
     public GameObject moon0, moon1, moon2;
     public GameObject HPBar;
+
+    private float yInput;
 
     private void Start()
     {
         HP = 50; HPmax = 50;
         transform.localScale = new Vector2(face * 1.8f, 1.8f);
-        shield = shieldObject.GetComponent<Shield>();
+        shield = GetComponentInChildren<Shield>();
+        keyboard = GetComponentInParent<Transform>().gameObject.GetComponentInChildren<KeyBoard>();
+    }
+
+    private void FixedUpdate()
+    {
+        updateMove();
     }
 
     public void relocate() // very useful
@@ -55,8 +64,21 @@ public class Witch : MonoBehaviour {
     // if chanting then forbid moving
     public void chant(int word)
     {
-        relocate();
         state = CHANGTING;
+        Debug.Log("Chant!");
+        switch (word)
+        {
+            case 100: skill100(); break;
+            case 200: skill200(); break;
+            case 300: skill300(); break;
+            case 110: skill110(); break;
+            case 220: skill220(); break;
+            case 330: skill330(); break;
+            case 111: skill111(); break;
+            case 222: skill222(); break;
+            case 333: skill333(); break;
+            default: break; //TODO: fangpi
+        }
         StartCoroutine("changeSpriteChant");
     }
 
@@ -91,7 +113,7 @@ public class Witch : MonoBehaviour {
 
     public void hurt(int value)
     {
-        // relocate if YingZhi
+        // TODO: 硬直
         // TODO: hurt anima
         if (shield.value >= value)
             shield.value -= value;
@@ -99,6 +121,11 @@ public class Witch : MonoBehaviour {
         {
             HP -= (value - shield.value);
             shield.value = 0;
+            if (HP < 0)
+            {
+                HP = 0;
+                // TODO: Gameover
+            }
         }
         refreshHPBar();
     }
@@ -153,16 +180,16 @@ public class Witch : MonoBehaviour {
     public void skill100() { createMaglet(1, 1, 1, Sprites.MagletRed); }
     public void skill200() { createMaglet(1, 1, 1, Sprites.MagletGreen); }
     public void skill300() { createMaglet(1, 1, 1, Sprites.MagletBlue); }
-    public void skill110() { }
-    public void skill220() { }
-    public void skill330() { }
-    public void skill111() { }
-    public void skill222() { }
-    public void skill333() { }
+    public void skill110() { createMaglet(1, 2, 2, Sprites.MagletRed); }
+    public void skill220() { createMaglet(1, 2, 2, Sprites.MagletGreen); }
+    public void skill330() { createMaglet(1, 2, 2, Sprites.MagletBlue); }
+    public void skill111() { createMaglet(1, 3, 3, Sprites.MagletRed); }
+    public void skill222() { createMaglet(1, 3, 3, Sprites.MagletGreen); }
+    public void skill333() { createMaglet(1, 3, 3, Sprites.MagletBlue); }
 
     public void freeze()
     {
-        keyboard.GetComponent<KeyBoard>().Key2.GetComponent<Key>().freeze();
+        keyboard.Key2.GetComponent<Key>().freeze();
     }
 
     public void dizzy()
@@ -172,7 +199,6 @@ public class Witch : MonoBehaviour {
         StartCoroutine("changeSpriteDizzy");
     }
 
-
     IEnumerator changeSpriteDizzy()
     {
         // TODO: dizzy anima
@@ -180,8 +206,29 @@ public class Witch : MonoBehaviour {
         state = NORMAL;
     }
 
+    void updateMove()
+    {
+        if (state == DIZZY)
+            return;
+
+        yInput = id == 0 ? Input.GetAxis("Vertical 1") : Input.GetAxis("Vertical 3");
+        if (yInput < -0.1f && state == NORMAL && row > 0)
+        {
+            target = row - 1;
+            move();
+        }
+        else if (yInput > 0.1f && state == NORMAL && row < 2)
+        {
+            target = row + 1;
+            move();
+        }
+    }
+
+
+
     public void getBuff(string buff)
     {
+        // TODO: a lot
         switch (buff)
         {
             case "": return;

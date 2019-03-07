@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Key : MonoBehaviour {
     // key pin
-    public int color;
+    public int color; // 1R 2G 3B
     public bool isChanted;
     public bool isCreating;
     private KeyBoard keyboard;
@@ -30,31 +30,6 @@ public class Key : MonoBehaviour {
             Chain.GetComponent<SpriteRenderer>().enabled = false;
         }
 
-    }
-
-    private void OnMouseOver()
-    {
-        if (isChanted)
-            return;
-
-        if (!isFrozen && !keyboard.isChanting && Input.GetMouseButtonDown(0))
-        {
-            keyboard.isChanting = true;
-            keyboard.witch.state = Witch.CHANGTING;
-            isChanted = true;
-            keyboard.word += keyboard.weight * color;
-            keyboard.weight /= 10;
-            GetComponent<SpriteRenderer>().sprite = Sprites.getKey1(color);
-            transform.localScale = new Vector2(0.8f, 0.8f);
-        }
-        else if (!isFrozen && keyboard.isChanting && Input.GetMouseButton(0))
-        {
-            isChanted = true;
-            keyboard.word += keyboard.weight * color;
-            keyboard.weight /= 10;
-            GetComponent<SpriteRenderer>().sprite = Sprites.getKey1(color);
-            transform.localScale = new Vector2(0.8f, 0.8f);
-        }
     }
 
     public void refresh()
