@@ -11,9 +11,10 @@ public class Witch : MonoBehaviour {
     // state machine
     public int state;
     public static int NORMAL = 0;
-    public static int CHANGTING = 1;
-    public static int MOVING = 2;
-    public static int DIZZY = 3;
+    // public static int CHANGTING = 1;
+    public static int CASTING = 2;
+    public static int MOVING = 3;
+    public static int DIZZY = 4;
 
 	public int row;
     public int target; // for move
@@ -43,7 +44,8 @@ public class Witch : MonoBehaviour {
 
     private void Start()
     {
-        HP = 50; HPmax = 50;
+        HPmax = 3000;
+        HP = HPmax;
         transform.localScale = new Vector2(face * 1.8f, 1.8f);
         shield = GetComponentInChildren<Shield>();
         keyboard = GetComponentInParent<Transform>().gameObject.GetComponentInChildren<KeyBoard>();
@@ -61,11 +63,18 @@ public class Witch : MonoBehaviour {
         state = NORMAL;
     }
 
+    // logic:
+    // can always chant
+    // when move, cannot cast
+    // when cast,cannot move
+
+
     // if chanting then forbid moving
     public void chant(int word)
     {
-        state = CHANGTING;
-        Debug.Log("Chant!");
+        // already judge whether NORMAL in Class.Keyboard
+        state = CASTING;
+        Debug.Log("Cast!");
         switch (word)
         {
             case 100: skill100(); break;
@@ -85,7 +94,7 @@ public class Witch : MonoBehaviour {
     IEnumerator changeSpriteChant()
     {
         GetComponent<SpriteRenderer>().sprite = spriteChant;
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(0.3f);
         GetComponent<SpriteRenderer>().sprite = spriteNormal;
         state = NORMAL;
     }
@@ -94,7 +103,10 @@ public class Witch : MonoBehaviour {
 	public void move()
 	{
 		if(state != NORMAL)
-			return;
+        {
+            target = row;
+            return;
+        }
         state = MOVING;
         GetComponent<Rigidbody2D>().velocity = new Vector2(0, 1) * (Global.getY(target) - Global.getY(row)) / 0.2f;
         StartCoroutine("changeSpriteMove");
@@ -125,6 +137,7 @@ public class Witch : MonoBehaviour {
             {
                 HP = 0;
                 // TODO: Gameover
+                Global.GameOver(1 - id);
             }
         }
         refreshHPBar();
@@ -146,15 +159,15 @@ public class Witch : MonoBehaviour {
             HPBar.GetComponent<SpriteRenderer>().sprite = Sprites.BarR;
         else
             HPBar.GetComponent<SpriteRenderer>().sprite = Sprites.BarG;
-        HPBar.transform.localScale = new Vector2(-(float)HP / HPmax * 11.5f * face, 1.5f);
+        HPBar.transform.localScale = new Vector2((float)HP / HPmax * 11.5f * face, 1.5f);
     }
 
-    public GameObject createMaglet(int spd, int damage, int energy, Sprite sprite, string buff = "")
+    public GameObject createMaglet(int spd, int damage, int energy, Sprite sprite, float scale, string buff = "")
     {
         GameObject maglet = new GameObject();
         maglet.tag = "Maglet";
         maglet.transform.position = new Vector2(transform.position.x + 2 * face, Global.getY(row) + 1f);
-        maglet.transform.localScale = new Vector3(face, 1, 1);
+        maglet.transform.localScale = new Vector3(face * scale, scale, scale);
         maglet.AddComponent<Maglet>().set((1 - face) / 2, damage, energy, buff);
         maglet.AddComponent<SpriteRenderer>().sprite = sprite;
 
@@ -177,15 +190,15 @@ public class Witch : MonoBehaviour {
         shield.value += value;
     }
 
-    public void skill100() { createMaglet(1, 1, 1, Sprites.MagletRed); }
-    public void skill200() { createMaglet(1, 1, 1, Sprites.MagletGreen); }
-    public void skill300() { createMaglet(1, 1, 1, Sprites.MagletBlue); }
-    public void skill110() { createMaglet(1, 2, 2, Sprites.MagletRed); }
-    public void skill220() { createMaglet(1, 2, 2, Sprites.MagletGreen); }
-    public void skill330() { createMaglet(1, 2, 2, Sprites.MagletBlue); }
-    public void skill111() { createMaglet(1, 3, 3, Sprites.MagletRed); }
-    public void skill222() { createMaglet(1, 3, 3, Sprites.MagletGreen); }
-    public void skill333() { createMaglet(1, 3, 3, Sprites.MagletBlue); }
+    public void skill100() { createMaglet(1, 100, 1, Sprites.MagletRed, 1); }
+    public void skill200() { createMaglet(1, 100, 1, Sprites.MagletGreen, 1); }
+    public void skill300() { createMaglet(1, 100, 1, Sprites.MagletBlue, 1); }
+    public void skill110() { createMaglet(1, 225, 2, Sprites.MagletRed, 1.25f); }
+    public void skill220() { createMaglet(1, 225, 2, Sprites.MagletGreen, 1.25f); }
+    public void skill330() { createMaglet(1, 225, 2, Sprites.MagletBlue, 1.25f); }
+    public void skill111() { createMaglet(1, 500, 3, Sprites.MagletRed, 1.5f); }
+    public void skill222() { createMaglet(1, 500, 3, Sprites.MagletGreen, 1.5f); }
+    public void skill333() { createMaglet(1, 500, 3, Sprites.MagletBlue, 1.5f); }
 
     public void freeze()
     {
@@ -208,16 +221,16 @@ public class Witch : MonoBehaviour {
 
     void updateMove()
     {
-        if (state == DIZZY)
+        if (state != NORMAL)
             return;
 
-        yInput = id == 0 ? Input.GetAxis("Vertical 1") : Input.GetAxis("Vertical 3");
-        if (yInput < -0.1f && state == NORMAL && row > 0)
+        yInput = id == 0 ? Input.GetAxis("Vertical 1") : Input.GetAxis("Vertical 2");
+        if (yInput > 0.1f && state == NORMAL && row > 0)
         {
             target = row - 1;
             move();
         }
-        else if (yInput > 0.1f && state == NORMAL && row < 2)
+        else if (yInput < -0.1f && state == NORMAL && row < 2)
         {
             target = row + 1;
             move();

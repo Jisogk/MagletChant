@@ -53,6 +53,8 @@ public class Maglet: MonoBehaviour{
         else if (enemy.tag == "Stone")
         {
             Debug.Log("ML & S!");
+            Debug.Log(enemy.GetComponent<MoonStone>().playerID);
+            Debug.Log(playerID);
             if (enemy.GetComponent<MoonStone>().playerID != playerID)
             {
                 enemy.GetComponent<MoonStone>().hurt(damage);

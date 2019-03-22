@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor;
 
 public class Global : MonoBehaviour {
 	public static float y0, y1, y2;
@@ -23,6 +24,12 @@ public class Global : MonoBehaviour {
         if (row == 2) return y2;
         if (row == 1) return y1;
         return y0;
+    }
+
+    public static void GameOver(int winner)
+    {
+        Time.timeScale = 0f;
+        EditorUtility.DisplayDialog("Game Over", (winner == 0 ? "P1" : "P2") + " wins", "确认", "取消");
     }
 
 

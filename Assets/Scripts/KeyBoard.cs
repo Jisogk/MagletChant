@@ -13,8 +13,7 @@ public class KeyBoard : MonoBehaviour {
     public int word; // XXX 1R 2G 3B
 
 
-    private float xInput;
-    private float yInput;
+    private bool IN1, IN2, IN3;
 
     // Use this for initialization
     void Start () {
@@ -28,9 +27,9 @@ public class KeyBoard : MonoBehaviour {
 	// Update is called once per frame
 	private void FixedUpdate () {
         if (witch.id == 0 ?
-            (Input.GetKeyDown(KeyCode.Joystick1Button2) || Input.GetKeyDown(KeyCode.Joystick1Button15)) :
-            (Input.GetKeyDown(KeyCode.Joystick3Button2) || Input.GetKeyDown(KeyCode.Joystick3Button15))) {
-            if (word > 0)
+            (Input.GetKeyDown(KeyCode.Joystick1Button0) || Input.GetKeyDown(KeyCode.Joystick1Button5)) :
+            (Input.GetKeyDown(KeyCode.Joystick2Button0) || Input.GetKeyDown(KeyCode.Joystick2Button5))) {
+            if (word > 0 && witch.state == Witch.NORMAL)
             {
                 Debug.Log(word);
                 witch.chant(word);
@@ -45,38 +44,40 @@ public class KeyBoard : MonoBehaviour {
                 isChanting = false;
             }
         }
-
-        xInput = witch.id == 0 ? -Input.GetAxis("Horizontal 2") : -Input.GetAxis("Horizontal 4");
-        yInput = witch.id == 0 ? Input.GetAxis("Vertical 2") : Input.GetAxis("Vertical 4");
-
-        key = (yInput > 0.1f && xInput == 0) ? Key0.GetComponent<Key>() :
-            (yInput < -0.1f && xInput < -0.1) ? Key1.GetComponent<Key>() :
-            (yInput < -0.1f && xInput > 0.1f) ? Key2.GetComponent<Key>() : null;
-
-        if(key != null && !key.isChanted)
+        else
         {
+            IN1 = witch.id == 0 ? Input.GetKeyDown(KeyCode.Joystick1Button3) : Input.GetKeyDown(KeyCode.Joystick2Button3);
+            IN2 = witch.id == 0 ? Input.GetKeyDown(KeyCode.Joystick1Button2) : Input.GetKeyDown(KeyCode.Joystick2Button2);
+            IN3 = witch.id == 0 ? Input.GetKeyDown(KeyCode.Joystick1Button1) : Input.GetKeyDown(KeyCode.Joystick2Button1);
 
-            if (!key.isFrozen && !isChanting)
+            key = IN1 ? Key0.GetComponent<Key>() :
+                IN2 ? Key1.GetComponent<Key>() :
+                IN3 ? Key2.GetComponent<Key>() : null;
+
+            if (key != null && !key.isChanted)
             {
-                isChanting = true;
-                witch.state = Witch.CHANGTING;
-                key.isChanted = true;
-                word += weight * key.color;
-                weight /= 10;
-                key.GetComponent<SpriteRenderer>().sprite = Sprites.getKey1(key.color);
-                key.transform.localScale = new Vector2(0.8f, 0.8f);
+
+                if (!key.isFrozen && !isChanting)
+                {
+                    isChanting = true;
+                    // witch.state = Witch.CHANGTING;
+                    key.isChanted = true;
+                    word += weight * key.color;
+                    weight /= 10;
+                    key.GetComponent<SpriteRenderer>().sprite = Sprites.getKey1(key.color);
+                    key.transform.localScale = new Vector2(0.8f, 0.8f);
+                }
+                else if (!key.isFrozen && isChanting)
+                {
+                    key.isChanted = true;
+                    word += weight * key.color;
+                    weight /= 10;
+                    key.GetComponent<SpriteRenderer>().sprite = Sprites.getKey1(key.color);
+                    key.transform.localScale = new Vector2(0.8f, 0.8f);
+                }
             }
-            else if (!key.isFrozen && isChanting)
-            {
-                key.isChanted = true;
-                word += weight * key.color;
-                weight /= 10;
-                key.GetComponent<SpriteRenderer>().sprite = Sprites.getKey1(key.color);
-                key.transform.localScale = new Vector2(0.8f, 0.8f);
-            }
+
         }
-
-
-
+        
     }
 }

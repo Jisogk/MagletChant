@@ -1536,7 +1536,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b290ed7e5996aac43901ea786d898c1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerID: 0
+  playerID: 1
   HPMax: 0
   HP: 0
   bar: {fileID: 363358684}
@@ -4183,7 +4183,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b290ed7e5996aac43901ea786d898c1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerID: 0
+  playerID: 1
   HPMax: 0
   HP: 0
   bar: {fileID: 267606635}
@@ -4578,7 +4578,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b290ed7e5996aac43901ea786d898c1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerID: 0
+  playerID: 1
   HPMax: 0
   HP: 0
   bar: {fileID: 2077207495}

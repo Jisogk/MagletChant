@@ -11,7 +11,7 @@ public class WitchAI : Witch {
         // for test
         // MFST freeze
         if (Input.GetKeyDown(KeyCode.L))
-            createMaglet(1, 10, 1, Sprites.MagletPurple, "MFSTFreeze");
+            createMaglet(1, 10, 1, Sprites.MagletPurple, 1, "MFSTFreeze");
 
 
 
@@ -45,7 +45,7 @@ public class WitchAI : Witch {
     IEnumerator testShoot()
     {
         yield return new WaitForSeconds(2);
-        createMaglet(1, 10, 1, Sprites.MagletRed);
+        createMaglet(1, 10, 1, Sprites.MagletRed, 1);
         isShooting = false;
     }
 

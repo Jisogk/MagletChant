@@ -9,7 +9,7 @@ public class MoonStone : MonoBehaviour {
     public GameObject bar;
 	// Use this for initialization
 	void Start () {
-        HPMax = 30;
+        HPMax = 3000;
         HP = HPMax;
         bar.transform.localScale = new Vector2(4, 0.3f);
 	}
@@ -32,6 +32,7 @@ public class MoonStone : MonoBehaviour {
         {
             HP = 0;
             // TODO: GameOver
+            Global.GameOver(1 - playerID);
         }
         refresh();
         
