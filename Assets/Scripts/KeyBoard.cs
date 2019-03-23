@@ -27,8 +27,8 @@ public class KeyBoard : MonoBehaviour {
 	// Update is called once per frame
 	private void FixedUpdate () {
         if (witch.id == 0 ?
-            (Input.GetKeyDown(KeyCode.Joystick1Button0) || Input.GetKeyDown(KeyCode.Joystick1Button5)) :
-            (Input.GetKeyDown(KeyCode.Joystick2Button0) || Input.GetKeyDown(KeyCode.Joystick2Button5))) {
+            (Input.GetKeyDown(KeyCode.Joystick1Button1) || Input.GetKeyDown(KeyCode.Joystick1Button2)) :
+            (Input.GetKeyDown(KeyCode.Joystick2Button1) || Input.GetKeyDown(KeyCode.Joystick2Button2))) {
             if (word > 0 && witch.state == Witch.NORMAL)
             {
                 Debug.Log(word);

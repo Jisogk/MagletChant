@@ -224,7 +224,10 @@ public class Witch : MonoBehaviour {
         if (state != NORMAL)
             return;
 
-        yInput = id == 0 ? Input.GetAxis("Vertical 1") : Input.GetAxis("Vertical 2");
+        // yInput = id == 0 ? Input.GetAxis("Vertical 1") : Input.GetAxis("Vertical 2");
+        yInput = id == 0 ? (Input.GetKeyDown(KeyCode.Joystick1Button0) ? 1 : (Input.GetKeyDown(KeyCode.Joystick1Button3) ? -1 : 0))
+            : (Input.GetKeyDown(KeyCode.Joystick2Button0) ? 1 : (Input.GetKeyDown(KeyCode.Joystick2Button3) ? -1 : 0));
+
         if (yInput > 0.1f && state == NORMAL && row > 0)
         {
             target = row - 1;
