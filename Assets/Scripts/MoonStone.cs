@@ -9,7 +9,7 @@ public class MoonStone : MonoBehaviour {
     public GameObject bar;
 	// Use this for initialization
 	void Start () {
-        HPMax = 3000;
+        HPMax = 1000;
         HP = HPMax;
         bar.transform.localScale = new Vector2(4, 0.3f);
 	}

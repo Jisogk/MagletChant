@@ -12,8 +12,9 @@ public class KeyBoard : MonoBehaviour {
     public int weight;
     public int word; // XXX 1R 2G 3B
 
-
-    private bool IN1, IN2, IN3;
+    private float xInput;
+    private float yInput;
+    // private bool IN1, IN2, IN3;
 
     // Use this for initialization
     void Start () {
@@ -46,13 +47,12 @@ public class KeyBoard : MonoBehaviour {
         }
         else
         {
-            IN1 = witch.id == 0 ? Input.GetKeyDown(KeyCode.Joystick1Button3) : Input.GetKeyDown(KeyCode.Joystick2Button3);
-            IN2 = witch.id == 0 ? Input.GetKeyDown(KeyCode.Joystick1Button2) : Input.GetKeyDown(KeyCode.Joystick2Button2);
-            IN3 = witch.id == 0 ? Input.GetKeyDown(KeyCode.Joystick1Button1) : Input.GetKeyDown(KeyCode.Joystick2Button1);
-
-            key = IN1 ? Key0.GetComponent<Key>() :
-                IN2 ? Key1.GetComponent<Key>() :
-                IN3 ? Key2.GetComponent<Key>() : null;
+            xInput = witch.id == 0 ? -Input.GetAxis("Horizontal 1") : -Input.GetAxis("Horizontal 2");
+            yInput = witch.id == 0 ? -Input.GetAxis("Vertical 1") : -Input.GetAxis("Vertical 2");
+            Debug.Log(xInput.ToString()+","+yInput.ToString());
+            key = (yInput > 0.1f && xInput == 0) ? Key0.GetComponent<Key>() :
+                (yInput < 0.1f && xInput < -0.1f) ? Key1.GetComponent<Key>() :
+                (yInput < 0.1f && xInput > 0.1f) ? Key2.GetComponent<Key>() : null;
 
             if (key != null && !key.isChanted)
             {

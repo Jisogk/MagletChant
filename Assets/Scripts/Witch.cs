@@ -44,7 +44,7 @@ public class Witch : MonoBehaviour {
 
     private void Start()
     {
-        HPmax = 3000;
+        HPmax = 1000;
         HP = HPmax;
         transform.localScale = new Vector2(face * 1.8f, 1.8f);
         shield = GetComponentInChildren<Shield>();
@@ -162,13 +162,13 @@ public class Witch : MonoBehaviour {
         HPBar.transform.localScale = new Vector2((float)HP / HPmax * 11.5f * face, 1.5f);
     }
 
-    public GameObject createMaglet(int spd, int damage, int energy, Sprite sprite, float scale, string buff = "")
+    public GameObject createMaglet(int type, int spd, int damage, int energy, Sprite sprite, float scale, string buff = "")
     {
         GameObject maglet = new GameObject();
         maglet.tag = "Maglet";
         maglet.transform.position = new Vector2(transform.position.x + 2 * face, Global.getY(row) + 1f);
         maglet.transform.localScale = new Vector3(face * scale, scale, scale);
-        maglet.AddComponent<Maglet>().set((1 - face) / 2, damage, energy, buff);
+        maglet.AddComponent<Maglet>().set((1 - face) / 2, type, damage, energy, buff);
         maglet.AddComponent<SpriteRenderer>().sprite = sprite;
 
 
@@ -190,15 +190,15 @@ public class Witch : MonoBehaviour {
         shield.value += value;
     }
 
-    public void skill100() { createMaglet(1, 100, 1, Sprites.MagletRed, 1); }
-    public void skill200() { createMaglet(1, 100, 1, Sprites.MagletGreen, 1); }
-    public void skill300() { createMaglet(1, 100, 1, Sprites.MagletBlue, 1); }
-    public void skill110() { createMaglet(1, 225, 2, Sprites.MagletRed, 1.25f); }
-    public void skill220() { createMaglet(1, 225, 2, Sprites.MagletGreen, 1.25f); }
-    public void skill330() { createMaglet(1, 225, 2, Sprites.MagletBlue, 1.25f); }
-    public void skill111() { createMaglet(1, 500, 3, Sprites.MagletRed, 1.5f); }
-    public void skill222() { createMaglet(1, 500, 3, Sprites.MagletGreen, 1.5f); }
-    public void skill333() { createMaglet(1, 500, 3, Sprites.MagletBlue, 1.5f); }
+    public void skill100() { createMaglet(1, 2, 100, 1, Sprites.MagletRed, 1); }
+    public void skill200() { createMaglet(2, 2, 100, 1, Sprites.MagletGreen, 1); }
+    public void skill300() { createMaglet(3, 2, 100, 1, Sprites.MagletBlue, 1); }
+    public void skill110() { createMaglet(1, 1, 225, 2, Sprites.MagletRed, 1.25f); }
+    public void skill220() { createMaglet(2, 1, 225, 2, Sprites.MagletGreen, 1.25f); }
+    public void skill330() { createMaglet(3, 1, 225, 2, Sprites.MagletBlue, 1.25f); }
+    public void skill111() { createMaglet(1, 1, 500, 3, Sprites.MagletRed, 1.5f); }
+    public void skill222() { createMaglet(2, 1, 500, 3, Sprites.MagletGreen, 1.5f); }
+    public void skill333() { createMaglet(3, 1, 500, 3, Sprites.MagletBlue, 1.5f); }
 
     public void freeze()
     {
